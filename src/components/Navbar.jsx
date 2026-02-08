@@ -6,39 +6,55 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="w-full bg-black border-b border-gray-800 px-6 py-4 flex justify-between items-center">
-      
-      {/* Logo */}
-      <h1
-        onClick={() => navigate("/")}
-        className="text-xl font-bold text-white cursor-pointer"
-      >
-        Avijit<span className="text-blue-500">.</span>
-      </h1>
+    <nav className="w-full bg-black border-b border-gray-800 px-6 py-4">
+      <div className="max-w-6xl mx-auto flex justify-between items-center">
+        
+        {/* Logo */}
+        <h1
+          onClick={() => navigate("/")}
+          className="text-xl font-bold text-white cursor-pointer"
+        >
+          Avijit<span className="text-blue-500">.</span>
+        </h1>
 
-      {/* Navigation */}
-      <div className="flex items-center gap-4">
-        <button onClick={() => navigate("/")} className="nav-link">
-          Home
-        </button>
+        {/* Navigation */}
+        <div className="flex items-center gap-3 flex-wrap">
+          
+          <Button
+            text="Home"
+            variant="secondary"
+            onClick={() => navigate("/")}
+          />
 
-        <button onClick={() => navigate("/about")} className="nav-link">
-          About
-        </button>
+          <Button
+            text="About"
+            variant="secondary"
+            onClick={() => navigate("/about")}
+          />
 
-        <button onClick={() => navigate("/skills")} className="nav-link">
-          Skills
-        </button>
+          <Button
+            text="Skills"
+            variant="secondary"
+            onClick={() => navigate("/skills")}
+          />
 
-        <button onClick={() => navigate("/projects")} className="nav-link">
-          Projects
-        </button>
+          <Button
+            text="Projects"
+            variant="secondary"
+            onClick={() => navigate("/projects")}
+          />
 
-        <Button
-          text="Contact"
-          variant="secondary"
-          onClick={() => navigate("/contact")}
-        />
+          <Button
+            text="Contact"
+            variant="secondary"
+            onClick={() => navigate("/contact")}
+          />
+
+          <Button
+            text="Admin"
+            onClick={() => navigate("/login")}
+          />
+        </div>
       </div>
     </nav>
   );
