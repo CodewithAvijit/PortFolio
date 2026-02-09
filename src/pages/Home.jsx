@@ -1,131 +1,242 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useSpring, useMotionValue, useMotionTemplate } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Summary from "../components/Summary";
 import Footer from "../components/Footer";
 import ProfileCard from "../components/Profile";
+import LeetcodeCard from "../components/Leetcodecard";
+
+// --- 1. SPOTLIGHT BACKGROUND COMPONENT (THEME UPDATE) ---
+const SpotlightBackground = () => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  useEffect(() => {
+    const handleMouseMove = ({ clientX, clientY }) => {
+      mouseX.set(clientX);
+      mouseY.set(clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+      {/* Static Ambient Glows - Updated to Mint/Cyan */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-emerald-900/10 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-cyan-900/10 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow delay-1000" />
+      
+      {/* Mouse Follower - Electric Blue */}
+      <motion.div
+        className="absolute w-[800px] h-[800px] bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 rounded-full blur-[100px]"
+        style={{
+          left: useMotionTemplate`${mouseX}px`,
+          top: useMotionTemplate`${mouseY}px`,
+          transform: "translate(-50%, -50%)",
+        }}
+      />
+      
+      {/* Grain Texture */}
+      <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
+    </div>
+  );
+};
+
+// --- 2. 3D TILT CARD WRAPPER ---
+const TiltCard = ({ children, className = "" }) => {
+  const ref = useRef(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const xSpring = useSpring(x, { stiffness: 300, damping: 20 }); // Snappier spring
+  const ySpring = useSpring(y, { stiffness: 300, damping: 20 });
+
+  const transform = useMotionTemplate`rotateX(${xSpring}deg) rotateY(${ySpring}deg)`;
+
+  const handleMouseMove = (e) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(yPct * -12); // Slightly stronger tilt
+    y.set(xPct * 12);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ transformStyle: "preserve-3d", transform }}
+      className={`relative transition-all duration-200 ease-out ${className}`}
+    >
+      <div style={{ transform: "translateZ(30px)" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+};
 
 // --- LOADER COMPONENT ---
 const LoadingScreen = ({ onComplete }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    // Simulate a loading counter (0% to 100%)
     const interval = setInterval(() => {
       setCount((prev) => {
         if (prev >= 100) {
           clearInterval(interval);
-          setTimeout(onComplete, 500); // Wait a bit at 100% before clearing
+          setTimeout(onComplete, 800); 
           return 100;
         }
-        return prev + Math.floor(Math.random() * 10) + 1; // Random jump
+        return prev + Math.floor(Math.random() * 12) + 2; 
       });
-    }, 100);
+    }, 60);
     return () => clearInterval(interval);
   }, [onComplete]);
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black text-white"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#020405] text-white"
       initial={{ y: 0 }}
       exit={{ y: "-100%", transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } }}
     >
-      <div className="text-right">
         <motion.h1 
-          className="text-9xl font-bold font-mono tracking-tighter"
+          className="text-[10rem] sm:text-[14rem] font-bold font-mono tracking-tighter leading-none text-emerald-500/20"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
           {count}%
         </motion.h1>
-        <div className="h-1 w-full bg-gray-800 mt-4 rounded-full overflow-hidden">
+        <div className="w-64 h-1 bg-gray-900 rounded-full overflow-hidden mt-8 relative">
+           <div className="absolute inset-0 bg-emerald-500/20 blur-[2px]"></div>
           <motion.div 
-            className="h-full bg-indigo-500"
+            className="h-full bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.8)]"
             style={{ width: `${count}%` }}
           />
         </div>
-      </div>
     </motion.div>
   );
 };
 
 // --- MAIN HOME COMPONENT ---
 const Home = () => {
-  const [loading, setLoading] = useState(true);
+  // 🚀 PERSISTENCE LOGIC:
+  // Initialize state based on sessionStorage. 
+  // If 'hasVisited' is true, start loading as FALSE.
+  const [loading, setLoading] = useState(() => {
+    const hasVisited = sessionStorage.getItem("portfolio_visited");
+    return !hasVisited;
+  });
+
+  const handleLoadingComplete = () => {
+    setLoading(false);
+    // Set the flag so next time it skips
+    sessionStorage.setItem("portfolio_visited", "true");
+  };
 
   return (
-    <div className="bg-[#030303] min-h-[100dvh] text-white selection:bg-indigo-500/30 overflow-x-hidden">
+    // Updated background to a rich, deep "Gunmetal" black
+    <div className="bg-[#020405] min-h-[100dvh] text-white selection:bg-emerald-500/30 selection:text-emerald-100 overflow-x-hidden font-sans">
       <AnimatePresence mode="wait">
         {loading ? (
-          <LoadingScreen key="loader" onComplete={() => setLoading(false)} />
+          <LoadingScreen key="loader" onComplete={handleLoadingComplete} />
         ) : (
           <motion.div
             key="content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
             className="relative flex flex-col min-h-screen"
           >
             
-            {/* --- AMBIENT BACKGROUNDS --- */}
-            {/* The "Cyberpunk" Mesh Gradient */}
-            <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-                <div className="absolute top-[-10%] left-[-20%] w-[70vw] h-[70vw] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
-                <div className="absolute bottom-[-10%] right-[-20%] w-[60vw] h-[60vw] bg-purple-600/10 rounded-full blur-[100px] mix-blend-screen" />
-                {/* Dot Grid Texture */}
-                <div className="absolute inset-0 opacity-[0.15]" 
-                     style={{ backgroundImage: 'radial-gradient(#a1a1aa 1px, transparent 1px)', backgroundSize: '32px 32px' }}>
-                </div>
-            </div>
-
+            <SpotlightBackground />
             <Navbar />
 
-            {/* --- MAIN HERO SECTION --- */}
-            <main className="flex-grow flex flex-col justify-center px-4 sm:px-8 lg:px-16 pt-28 pb-16 lg:pt-0">
+            {/* --- MAIN CONTENT AREA --- */}
+            <main className="flex-grow flex flex-col px-4 sm:px-8 lg:px-16 pt-32 pb-20 relative z-10">
               <div className="max-w-[1400px] mx-auto w-full">
                 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-                  
-                  {/* HERO TEXT AREA (Takes up 7 cols on Desktop) */}
-                  <motion.div 
-                    className="lg:col-span-7 order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left"
-                    initial={{ opacity: 0, y: 40 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
-                  >
+                {/* 1. HERO SECTION */}
+                <motion.div 
+                  className="w-full flex justify-center mb-24"
+                  initial={{ opacity: 0, scale: 0.95, y: 30 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ duration: 1, ease: "easeOut" }} 
+                >
+                  <div className="text-center relative">
+                    {/* Updated Hero Glow to Cyan */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-cyan-500/10 blur-[90px] rounded-full pointer-events-none" />
                     <Hero />
+                  </div>
+                </motion.div>
+
+                {/* 2. BENTO GRID SHOWCASE */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                  
+                  {/* Left: Profile Card */}
+                  <motion.div 
+                    className="lg:col-span-5 flex flex-col justify-center"
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                  >
+                    <TiltCard className="h-full flex items-center justify-center">
+                        <div className="relative group w-full max-w-md">
+                            {/* NEW: Emerald/Cyan Gradient Border */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 via-cyan-500 to-teal-400 rounded-2xl blur opacity-20 group-hover:opacity-100 transition duration-700"></div>
+                            <div className="relative bg-[#050a0a] rounded-2xl border border-white/5 p-1 shadow-2xl backdrop-blur-sm">
+                                <ProfileCard />
+                            </div>
+                        </div>
+                    </TiltCard>
                   </motion.div>
 
-                  {/* PROFILE CARD AREA (Takes up 5 cols on Desktop) */}
+                  {/* Right: LeetCode Card */}
                   <motion.div 
-                    className="lg:col-span-5 order-1 lg:order-2 flex justify-center lg:justify-end"
-                    initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
-                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                    transition={{ delay: 0.6, duration: 0.8, type: "spring", bounce: 0.4 }}
+                    className="lg:col-span-7 flex flex-col justify-center"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3, duration: 0.8 }}
                   >
-                    <div className="relative group w-full max-w-md">
-                      {/* Interactive Glow behind card that moves on hover */}
-                      <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-indigo-600 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-                      
-                      <div className="relative">
-                        <ProfileCard />
-                      </div>
-                    </div>
+                    <TiltCard className="h-full flex items-center justify-center">
+                        <div className="relative group w-full">
+                            {/* NEW: Cyan/Lime Gradient Border */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-400 via-cyan-500 to-emerald-500 rounded-2xl blur opacity-20 group-hover:opacity-100 transition duration-700"></div>
+                            <div className="relative bg-[#050a0a] rounded-2xl border border-white/5 p-1 shadow-2xl overflow-hidden flex items-center justify-center min-h-[300px] backdrop-blur-sm">
+                                <LeetcodeCard 
+                                    username="codewithavijit_2004" 
+                                    theme="dark" // You might want to ensure the internal card theme matches or is transparent
+                                    width="100%" 
+                                />
+                            </div>
+                        </div>
+                    </TiltCard>
                   </motion.div>
 
                 </div>
+
               </div>
             </main>
 
-            {/* --- SUMMARY & FOOTER STAGGERED ENTRY --- */}
+            {/* --- SUMMARY & FOOTER (Glassmorphism) --- */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
-              className="relative z-10"
+              transition={{ delay: 0.5, duration: 0.8 }}
+              className="relative z-10 mt-12"
             >
-              <div className="backdrop-blur-xl bg-white/5 border-t border-white/10">
+              {/* Cyan Divider */}
+              <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent opacity-50 mb-0" />
+              
+              <div className="backdrop-blur-2xl bg-[#010203]/80 border-t border-white/5 shadow-[0_-20px_60px_rgba(0,0,0,0.9)]">
                 <Summary />
               </div>
               <Footer />
