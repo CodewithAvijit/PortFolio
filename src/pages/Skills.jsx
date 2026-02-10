@@ -1,104 +1,32 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
-// 1. Import the SkillBadge Component
-import SkillBadge from '../components/SkillBadge'; 
+import { useNavigate } from 'react-router-dom';
+import GlowCard from '../components/GlowCard';
 
-// --- 1. THE MAGICAL CARD COMPONENT ---
-const MagicalSkillCard = ({ title, index }) => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
+// --- VISUAL ASSETS ---
 
-  function handleMouseMove({ currentTarget, clientX, clientY }) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
+// 1. The Deep Abyss Background
+// mimics the radial fade in Screenshot 1
+const AbyssBackground = () => (
+  <div className="fixed inset-0 z-0 pointer-events-none bg-[#02040a]">
+    {/* Subtle central glow to break the flat black */}
+    <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[600px] bg-cyan-900/10 rounded-full blur-[120px]" />
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.1, duration: 0.5 }}
-      className="group relative border border-white/10 bg-gray-900/50 overflow-hidden rounded-xl px-8 py-10 transition-colors hover:border-white/20"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Spotlight Overlay */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              650px circle at ${mouseX}px ${mouseY}px,
-              rgba(16, 185, 129, 0.15),
-              transparent 80%
-            )
-          `,
-        }}
-      />
-      
-      {/* Spotlight Border */}
-      <motion.div
-        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
-        style={{
-          background: useMotionTemplate`
-            radial-gradient(
-              400px circle at ${mouseX}px ${mouseY}px,
-              rgba(6, 182, 212, 0.4),
-              transparent 80%
-            )
-          `,
-        }}
-        aria-hidden="true"
-      />
+    {/* Bottom glow */}
+    <div className="absolute bottom-[-10%] right-0 w-[40vw] h-[400px] bg-teal-900/10 rounded-full blur-[100px]" />
 
-      {/* Card Content */}
-      <div className="relative h-full flex flex-col justify-between z-10">
-        
-        {/* Top Icon Area */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center border border-white/10 shadow-[0_0_15px_rgba(16,185,129,0.2)] group-hover:scale-110 transition-transform duration-300">
-            <span className="font-mono text-xl font-bold text-emerald-400">
-                {title ? title.substring(0, 2).toUpperCase() : "SK"}
-            </span>
-          </div>
-          <div className="flex gap-1">
-             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/30 group-hover:bg-emerald-400 animate-pulse"></div>
-             <div className="w-1.5 h-1.5 rounded-full bg-cyan-500/30 group-hover:bg-cyan-400 animate-pulse delay-75"></div>
-          </div>
-        </div>
-
-        {/* Skill Name & Badge */}
-        <div>
-          <h3 className="text-2xl font-bold text-white tracking-tight group-hover:text-emerald-300 transition-colors mb-4">
-            {title}
-          </h3>
-          
-          {/* 2. REPLACED TEXT WITH SKILL BADGE */}
-          <div className="flex items-center">
-             <SkillBadge text="Verified Skill" color="emerald" />
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-};
-
-// --- 2. BACKGROUND COMPONENT ---
-const AmbientBackground = () => (
-  <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-     <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-emerald-900/10 rounded-full blur-[120px]" />
-     <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-cyan-900/10 rounded-full blur-[120px]" />
-     <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03]"></div>
+    {/* Optional: subtle noise for texture */}
+    <div className="absolute inset-0 opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
   </div>
 );
 
-// --- 3. MAIN COMPONENT ---
+// --- MAIN COMPONENT ---
+
 const SkillsList = () => {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const API_URL = "https://portfolio-backend-t56b.onrender.com/skills";
 
@@ -108,90 +36,80 @@ const SkillsList = () => {
         const res = await axios.get(API_URL);
         setSkills(res.data);
       } catch (err) {
-        setError("System Offline. Could not establish connection to Skills DB.");
+        // Fallback data if API fails
+        setSkills([
+          { id: 1, skill: "React" },
+          { id: 2, skill: "Tailwind CSS" },
+          { id: 3, skill: "Node.js" },
+          { id: 4, skill: "C++" },
+        ]);
       } finally {
-        setTimeout(() => setLoading(false), 800); 
+        setLoading(false);
       }
     };
     fetchSkills();
   }, []);
-
-  if (loading) return (
-    <div className="bg-[#020405] min-h-screen text-emerald-500 flex flex-col items-center justify-center font-mono">
-       <div className="w-16 h-16 border-4 border-emerald-500/30 border-t-emerald-400 rounded-full animate-spin mb-4"></div>
-       <div className="animate-pulse tracking-widest">INITIALIZING SKILL MATRIX...</div>
-    </div>
-  );
-
+  const navigate = useNavigate();
   return (
-    <div className="bg-[#020405] min-h-screen relative text-slate-100 font-sans selection:bg-emerald-500/30">
-      <AmbientBackground />
-      
-      <div className="relative z-10">
-        <Navbar />
+    <div className="min-h-screen bg-[#02040a] text-slate-200 font-sans selection:bg-cyan-500/30">
+      <Navbar />
+      <AbyssBackground />
 
-        <div className="px-6 py-24 sm:px-12 lg:px-24">
-          <div className="max-w-7xl mx-auto">
-            
-            {/* Header Section */}
-            <div className="mb-20 text-center max-w-3xl mx-auto">
-              <motion.div
-                 initial={{ opacity: 0, scale: 0.9 }}
-                 animate={{ opacity: 1, scale: 1 }}
-                 transition={{ duration: 0.8 }}
-                 className="inline-block mb-4 px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 text-xs font-mono tracking-widest uppercase"
-              >
-                // System Capabilities
-              </motion.div>
-              
-              <motion.h2 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1, duration: 0.8 }}
-                className="text-5xl md:text-7xl font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60 mb-6"
-              >
-                Technical <span className="text-emerald-400">Arsenal</span>
-              </motion.h2>
-              
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.8 }}
-                className="text-lg text-slate-400 leading-relaxed"
-              >
-                A comprehensive collection of tools, languages, and frameworks 
-                powering high-performance applications.
-              </motion.p>
-            </div>
 
-            {/* ERROR STATE */}
-            {error && (
-              <div className="p-6 border border-red-500/30 bg-red-500/10 rounded-xl text-red-400 text-center font-mono">
-                 ⚠️ {error}
-              </div>
-            )}
+      <div className="relative z-10 px-6 pt-32 pb-20 max-w-7xl mx-auto">
 
-            {/* SKILLS GRID */}
-            {!error && skills.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {skills.map((skill, index) => (
-                  <MagicalSkillCard 
-                    key={skill.id || index} 
-                    title={skill.skill} 
-                    index={index} 
-                  />
-                ))}
-              </div>
-            ) : (
-                !error && (
-                    <div className="text-center p-20 border border-dashed border-white/10 rounded-2xl">
-                        <p className="text-slate-500">No skills data detected in the matrix.</p>
-                    </div>
-                )
-            )}
+        {/* Header Section replicating Screenshot 1 typography */}
+        <div className="text-center mb-20">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-5xl md:text-7xl font-bold text-white mb-6"
+          >
+            Avijit <span className="text-[#3b82f6]">Technical</span> Stack
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="text-slate-400 text-lg max-w-2xl mx-auto"
+          >
+            Building scalable modern web apps with the technologies listed below.
+          </motion.p>
+          <div className="mt-8 flex justify-center gap-4">
+            <button
+              onClick={() => navigate("/projects")}
+              className="bg-[#1d4ed8] text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 transition shadow-[0_4px_14px_0_rgba(29,78,216,0.39)]"
+            >
+              View Projects
+            </button>
 
+            <button
+              onClick={() => navigate("/contact")}
+              className="border border-slate-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-white/5 transition"
+            >
+              Contact Me
+            </button>
           </div>
+
         </div>
+
+        {/* Skills Grid */}
+        {loading ? (
+          <div className="flex justify-center h-64 items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-500"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {skills.map((skill, index) => (
+              <GlowCard
+                key={skill.id || index}
+                title={skill.skill}
+                index={index}
+              />
+            ))}
+          </div>
+        )}
+
       </div>
     </div>
   );

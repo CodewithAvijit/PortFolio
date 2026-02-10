@@ -1,23 +1,33 @@
-Home.jsx
+# Portfolio Website
 
-Navbar
+A personal portfolio website built to showcase projects, skills, and experience using a modern full-stack architecture.
 
-Footer
-(optional: summary sections, buttons, hero content)
+---
 
-About.jsx
+## Tech Stack
 
-Navbar
+### Frontend
+- React
+- Tailwind CSS
+- Framer Motion
 
-Footer
-(about text, education, experience)
+### Backend
+- Spring Boot
+- REST APIs
 
-Projects.jsx
+### Database
+- Supabase (PostgreSQL)
 
-Navbar
+---
 
-Footer
+## Features
 
-ProjectCard ✅
+- Responsive and modern UI
+- Project and skill management
+- RESTful backend integration
+- Smooth animations and transitions
+- Scalable and clean architecture
 
-Skills.jsx
+---
+## created by
+ - Avijit Bhadra

@@ -21,11 +21,11 @@ const Profile = () => {
       </h2>
 
       <p className="text-gray-400 text-sm md:text-base mt-1">
-        Full-Stack Developer • AI Enthusiast
+        Full Stack Developer • AI Enthusiast
       </p>
 
       <p className="text-gray-500 text-sm mt-3">
-        Building modern web apps with React, Tailwind & AI-driven solutions.
+        Building modern web apps with React, Tailwind , Springboot  & AI-driven solutions.
       </p>
     </div>
   );
