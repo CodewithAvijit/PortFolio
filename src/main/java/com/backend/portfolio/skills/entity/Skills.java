@@ -1,22 +1,32 @@
-package com.backend.portfolio.entity;
+package com.backend.portfolio.skills.entity;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import com.backend.portfolio.projects.entity.Projects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "skills")
 public class Skills {
    @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY) 
-   @Column(name="id")
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+   @Column(name = "id")
    private Integer id;
    @Column(name = "skill")
    private String skill;
-   
+   @ManyToMany(mappedBy = "skills")
+   @JsonIgnore
+   private Set<Projects> projects = new HashSet<>();
+
    public Skills() {
    }
 
@@ -38,6 +48,14 @@ public class Skills {
 
    public void setSkill(String skill) {
       this.skill = skill;
+   }
+
+   public Set<Projects> getProjects() {
+      return projects;
+   }
+
+   public void setProjects(Set<Projects> projects) {
+      this.projects = projects;
    }
 
    @Override

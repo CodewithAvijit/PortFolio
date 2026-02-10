@@ -1,9 +1,9 @@
-package com.backend.portfolio.service;
+package com.backend.portfolio.skills.service;
 
 import java.util.List;
 
-import com.backend.portfolio.dao.SkillsAdd;
-import com.backend.portfolio.entity.Skills;
+import com.backend.portfolio.skills.dao.SkillsAdd;
+import com.backend.portfolio.skills.entity.Skills;
 
 public interface SkillsService {
     List<Skills> allskills();

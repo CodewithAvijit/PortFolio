@@ -1,4 +1,4 @@
-package com.backend.portfolio.controller;
+package com.backend.portfolio.skills.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.portfolio.dao.SkillsAdd;
-import com.backend.portfolio.entity.Skills;
-import com.backend.portfolio.service.SkillsService;
+import com.backend.portfolio.skills.service.SkillsService;
+import com.backend.portfolio.skills.dao.SkillsAdd;
+import com.backend.portfolio.skills.entity.Skills;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

@@ -1,4 +1,4 @@
-package com.backend.portfolio.dao;
+package com.backend.portfolio.skills.dao;
 
 public class SkillsAdd {
     private String skill;
