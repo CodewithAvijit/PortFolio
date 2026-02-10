@@ -25,7 +25,7 @@
 # RUN mvn clean package -DskipTests
 
 # # Stage 3: Final Runtime Image
-# FROM openjdk:25-jdk-slim
+# FROM openjdk:25-ea-jdk-oracle
 # WORKDIR /app
 
 # COPY --from=build /app/target/*.jar app.jar
@@ -34,20 +34,23 @@
 
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-
-# -------- Stage 1: Build --------
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+# -------- Build Stage --------
+FROM openjdk:25-ea-jdk-oracle AS build
 WORKDIR /app
 
-COPY pom.xml .
-RUN mvn dependency:go-offline
+# Install Maven
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
 
-COPY . .
+# Copy project
+COPY pom.xml .
+COPY src ./src
+
+# Build
 RUN mvn clean package -DskipTests
 
 
-# -------- Stage 2: Runtime --------
-FROM openjdk:25-ea-jdk
+# -------- Runtime Stage --------
+FROM openjdk:25-ea-jdk-oracle
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
