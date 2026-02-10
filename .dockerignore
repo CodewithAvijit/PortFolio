@@ -1,0 +1,26 @@
+# Maven
+target/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+.sts4-cache/
+.springBeans
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docs
+HELP.md
+
+# OS files
+.DS_Store
+Thumbs.db
