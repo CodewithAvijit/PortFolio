@@ -47,7 +47,7 @@ RUN mvn clean package -DskipTests
 
 
 # -------- Stage 2: Runtime --------
-FROM openjdk:25-jdk-slim
+FROM openjdk:25-ea-jdk
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
