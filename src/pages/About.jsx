@@ -76,15 +76,15 @@ const About = () => {
             <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-white/5 pt-8">
               <div>
                 <h3 className="text-white font-bold text-xl">Education</h3>
-                <p className="text-sm text-slate-500 mt-1">Computer Science Engineering</p>
+                <p className="text-sm text-slate-500 mt-1">Btech-Cse Narula Institute of Technology</p>
               </div>
               <div>
                 <h3 className="text-white font-bold text-xl">Focus</h3>
-                <p className="text-sm text-slate-500 mt-1">Web Dev & AI Integration</p>
+                <p className="text-sm text-slate-500 mt-1">Web Dev & AIML</p>
               </div>
               <div>
                 <h3 className="text-white font-bold text-xl">Location</h3>
-                <p className="text-sm text-slate-500 mt-1">India</p>
+                <p className="text-sm text-slate-500 mt-1">Kolkata,India</p>
               </div>
             </div>
 
