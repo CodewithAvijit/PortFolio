@@ -8,8 +8,7 @@ import {
   FaSignOutAlt, 
   FaTachometerAlt, 
   FaBars, 
-  FaTimes,
-  FaUserCircle 
+  FaTimes
 } from "react-icons/fa";
 
 import DashBoard from "../adminpages/DashBoard";
@@ -62,7 +61,6 @@ const AdminPanel = () => {
     navigate("/");
   };
 
-  // --- Sidebar Button Component ---
   const NavButton = ({ tab, icon: Icon, label }) => (
     <button 
       onClick={() => {
@@ -121,17 +119,17 @@ const AdminPanel = () => {
           <NavButton tab="projects" icon={FaProjectDiagram} label="Projects" />
           <NavButton tab="messages" icon={FaEnvelope} label="Messages" />
           <NavButton tab="skills" icon={FaCode} label="Skills" />
-        </nav>
 
-        <div className="p-4 border-t border-gray-800/30 bg-gray-900/20">
-          
-          <button 
-            onClick={handleLogout}
-            className="flex items-center justify-center gap-2 w-full px-4 py-2.5 text-sm font-medium text-red-400 bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 hover:border-red-500/20 rounded-lg transition-all duration-200"
-          >
-            <FaSignOutAlt /> Log Out
-          </button>
-        </div>
+          <div className="pt-4 mt-4 border-t border-gray-800/30">
+            <button 
+              onClick={handleLogout}
+              className="flex items-center gap-4 w-full px-5 py-3.5 rounded-xl transition-all duration-300 font-medium text-gray-400 hover:bg-red-500/10 hover:text-red-400 group"
+            >
+              <FaSignOutAlt className="text-xl text-gray-500 group-hover:text-red-400" />
+              <span>Log Out</span>
+            </button>
+          </div>
+        </nav>
       </aside>
 
       <main className="flex-1 min-w-0 bg-black min-h-screen">
@@ -141,9 +139,6 @@ const AdminPanel = () => {
             <div>
               <h1 className="text-3xl font-bold capitalize text-white">{activeTab}</h1>
               <p className="text-gray-500 mt-1 text-sm">Manage your portfolio content efficiently</p>
-            </div>
-            <div className="flex gap-2">
-               {/* Optional: Add global action buttons here */}
             </div>
           </div>
 
