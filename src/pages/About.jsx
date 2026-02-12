@@ -2,9 +2,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Button from "../components/Button"; // Assuming you might want a button inside
+import ResumeCard from "../components/ResumeCard"; 
 
-// Reusing the Background Component for consistency
 const AbyssBackground = () => (
   <div className="fixed inset-0 z-0 pointer-events-none bg-[#02040a]">
     <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[600px] bg-cyan-900/10 rounded-full blur-[120px]" />
@@ -14,79 +13,103 @@ const AbyssBackground = () => (
 );
 
 const About = () => {
+  const resumeLink = "https://drive.google.com/file/d/1wPc69-uh1PDvcvXjuTQ58rcbkUDbv6Hc/view";
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.6, ease: "easeOut" } 
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-[#02040a] text-slate-200 font-sans selection:bg-cyan-500/30 flex flex-col relative overflow-hidden">
+    <div className="min-h-screen bg-[#02040a] text-slate-200 font-sans selection:bg-cyan-500/30 flex flex-col relative overflow-x-hidden scroll-smooth">
       <Navbar />
       <AbyssBackground />
 
       <main className="flex-grow px-6 pt-32 pb-20 relative z-10 flex items-center justify-center">
-
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl w-full"
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="max-w-6xl w-full"
         >
-
-          {/* Header */}
-          <div className="mb-10 text-center md:text-left">
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+          <motion.div variants={itemVariants} className="mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">
               About <span className="text-blue-500">Me</span>
             </h1>
-            <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full mx-auto md:mx-0" />
-          </div>
+            <div className="h-1.5 w-20 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-full shadow-[0_0_15px_rgba(37,99,235,0.4)]" />
+          </motion.div>
 
-          {/* Glass Card Content */}
-          <div className="bg-[#0a0f16]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <motion.div 
+              variants={itemVariants}
+              className="lg:col-span-2 bg-[#0a0f16]/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden hover:border-white/20 transition-colors duration-500 group"
+            >
+              <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none group-hover:bg-blue-500/10 transition-colors duration-700" />
 
-            {/* Decorative decorative gradient blob inside card */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+              <div className="relative z-10 space-y-6 text-slate-400 leading-relaxed text-lg">
+                <p>
+                  <span className="text-white font-bold text-2xl tracking-tight">Hello! I’m Avijit.</span>
+                </p>
 
-            <div className="relative z-10 space-y-6 text-lg text-slate-400 leading-relaxed">
-              <p>
-                <span className="text-white font-semibold text-xl">Hello! I’m Avijit.</span>
-              </p>
+                <p>
+                  I am a <strong className="text-cyan-400 font-medium">Computer Science student</strong> and 
+                  <strong className="text-blue-400 font-medium"> full-stack developer</strong> focused on building 
+                  reliable, scalable web applications. I enjoy understanding systems deeply, 
+                  from application logic to infrastructure.
+                </p>
 
-              <p>
-                I am a <strong className="text-cyan-400">Computer Science student</strong> and
-                <strong className="text-blue-400"> full-stack developer</strong> with a strong focus on building
-                reliable, scalable, and well-structured web applications. I enjoy understanding systems deeply,
-                from application logic to underlying infrastructure.
-              </p>
+                <p>
+                  My focus is <span className="text-slate-100 font-medium px-1 bg-white/5 rounded">backend engineering</span>—designing 
+                  scalable APIs and workflows that emphasize performance and maintainability.
+                </p>
 
-              <p>
-                My primary focus is on <span className="text-slate-200 border-b border-slate-700">backend engineering</span>,
-                where I design scalable APIs, data models, and system workflows that emphasize performance,
-                reliability, and maintainability. I work with modern backend technologies to build
-                well-structured services that support real-world application demands.
-              </p>
-
-              <p>
-                In parallel, I have a strong interest in
-                <span className="text-slate-200 border-b border-slate-700"> artificial intelligence and machine learning</span>,
-                particularly in applying data-driven techniques to solve practical problems and enhance
-                application intelligence. I enjoy exploring how backend systems and AI can work together
-                to deliver smarter, more adaptive solutions.
-              </p>
-
-
-            </div>
-
-            {/* Optional Stats / Highlights Row */}
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-white/5 pt-8">
-              <div>
-                <h3 className="text-white font-bold text-xl">Education</h3>
-                <p className="text-sm text-slate-500 mt-1">Btech Narula Institute of Technology</p>
+                <p>
+                  I also explore <span className="text-slate-100 font-medium px-1 bg-white/5 rounded">AI and machine learning</span>, 
+                  applying data-driven techniques to solve practical problems.
+                </p>
               </div>
-              <div>
-                <h3 className="text-white font-bold text-xl">Focus</h3>
-                <p className="text-sm text-slate-500 mt-1">Web Dev & AIML</p>
+
+              {/* Stats Row */}
+              <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-white/5 pt-8">
+                <div className="space-y-1">
+                  <h3 className="text-white font-bold text-lg tracking-tight">Education</h3>
+                  <p className="text-sm text-slate-500">B.Tech, Narula Institute</p>
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-white font-bold text-lg tracking-tight">Focus</h3>
+                  <p className="text-sm text-slate-500">Web Dev & AI/ML</p>
+                </div>
+                <div className="space-y-1">
+                  <h3 className="text-white font-bold text-lg tracking-tight">Location</h3>
+                  <p className="text-sm text-slate-500">Kolkata, India</p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-white font-bold text-xl">Location</h3>
-                <p className="text-sm text-slate-500 mt-1">Kolkata</p>
+            </motion.div>
+
+            <motion.div 
+              variants={itemVariants}
+              className="lg:col-span-1"
+            >
+              <div className="bg-[#0a0f16]/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-xl flex items-center justify-center h-full min-h-[400px] hover:border-white/20 transition-all duration-500 hover:shadow-blue-500/5 group">
+                <ResumeCard driveLink={resumeLink} />
               </div>
-            </div>
+            </motion.div>
 
           </div>
         </motion.div>

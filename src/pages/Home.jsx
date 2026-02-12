@@ -8,7 +8,6 @@ import ProfileCard from "../components/Profile";
 import LeetcodeCard from "../components/Leetcodecard";
 import SocialMediaCard from "../components/SocialMediaCard";
 
-// --- 1. SPOTLIGHT BACKGROUND COMPONENT ---
 const SpotlightBackground = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -24,11 +23,9 @@ const SpotlightBackground = () => {
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-      {/* Static Ambient Glows */}
       <div className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-emerald-900/10 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-cyan-900/10 rounded-full blur-[120px] mix-blend-screen animate-pulse-slow delay-1000" />
       
-      {/* Mouse Follower */}
       <motion.div
         className="absolute w-[800px] h-[800px] bg-gradient-to-r from-emerald-500/5 to-cyan-500/5 rounded-full blur-[100px]"
         style={{
@@ -38,13 +35,11 @@ const SpotlightBackground = () => {
         }}
       />
       
-      {/* Grain Texture */}
       <div className="absolute inset-0 opacity-[0.04] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] pointer-events-none"></div>
     </div>
   );
 };
 
-// --- 2. 3D TILT CARD WRAPPER ---
 const TiltCard = ({ children, className = "" }) => {
   const ref = useRef(null);
   const x = useMotionValue(0);
@@ -88,7 +83,6 @@ const TiltCard = ({ children, className = "" }) => {
   );
 };
 
-// --- LOADER COMPONENT ---
 const LoadingScreen = ({ onComplete }) => {
   const [count, setCount] = useState(0);
 
@@ -130,12 +124,15 @@ const LoadingScreen = ({ onComplete }) => {
   );
 };
 
-// --- MAIN HOME COMPONENT ---
 const Home = () => {
   const [loading, setLoading] = useState(() => {
     const hasVisited = sessionStorage.getItem("portfolio_visited");
     return !hasVisited;
   });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
 
   const handleLoadingComplete = () => {
     setLoading(false);
@@ -155,13 +152,9 @@ const Home = () => {
             <SpotlightBackground />
             <Navbar />
 
-            {/* --- MAIN CONTENT AREA --- */}
-            {/* COMPACT UPDATE: Reduced pt-32 to pt-24 for better fit */}
             <main className="flex-grow flex flex-col px-4 sm:px-8 lg:px-16 pt-24 pb-20 relative z-10">
               <div className="max-w-[1400px] mx-auto w-full">
                 
-                {/* 1. HERO SECTION */}
-                {/* COMPACT UPDATE: Reduced mb-24 to mb-12 */}
                 <motion.div 
                   className="w-full flex justify-center mb-12"
                   initial={{ opacity: 0, scale: 0.95, y: 30 }}
@@ -174,11 +167,8 @@ const Home = () => {
                   </div>
                 </motion.div>
 
-                {/* 2. BENTO GRID SHOWCASE */}
-                {/* COMPACT UPDATE: Reduced gap-8 to gap-6 */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                   
-                  {/* Row 1 Left: Profile Card (5 Cols) */}
                   <motion.div 
                     className="lg:col-span-5 flex flex-col justify-center"
                     initial={{ opacity: 0, x: -30 }}
@@ -195,7 +185,6 @@ const Home = () => {
                     </TiltCard>
                   </motion.div>
 
-                  {/* Row 1 Right: LeetCode Card (7 Cols) */}
                   <motion.div 
                     className="lg:col-span-7 flex flex-col justify-center"
                     initial={{ opacity: 0, x: 30 }}
@@ -216,15 +205,13 @@ const Home = () => {
                     </TiltCard>
                   </motion.div>
 
-                  {/* Row 2: Social Media Card */}
-                  {/* FIX: Changed col-span-6 to col-span-12 to fill the empty space */}
                   <motion.div 
                     className="lg:col-span-12 flex flex-col"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.4, duration: 0.8 }}
                   >
-                     <TiltCard className="h-full">
+                      <TiltCard className="h-full">
                         <div className="relative group w-full h-full">
                             <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-20 group-hover:opacity-100 transition duration-700"></div>
                             <div className="relative h-full bg-[#050a0a] rounded-2xl border border-white/5 shadow-2xl backdrop-blur-sm">
@@ -233,19 +220,15 @@ const Home = () => {
                         </div>
                     </TiltCard>
                   </motion.div>
-                  
-                  {/* Removed the empty placeholder div to fix the layout gap */}
-
                 </div>
               </div>
             </main>
 
-            {/* --- SUMMARY & FOOTER --- */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.8 }}
-              className="relative z-10 mt-8" /* Reduced margin-top for compactness */
+              className="relative z-10 mt-8" 
             >
               <div className="w-full h-px bg-gradient-to-r from-transparent via-cyan-500/20 to-transparent opacity-50 mb-0" />
               

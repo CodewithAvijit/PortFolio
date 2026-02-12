@@ -81,15 +81,14 @@ const Navbar = () => {
               );
             })}
 
-            {/* Admin Button */}
-            <div className="ml-4">
+             <div className="ml-4">
               <Button
                 text="Admin"
                 variant="secondary"
                 onClick={() => navigate("/login")}
                 className="!py-2 !px-5 text-sm"
               />
-            </div>
+            </div> 
           </div>
 
           {/* --- MOBILE TOGGLE --- */}
@@ -102,7 +101,6 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* --- MOBILE MENU OVERLAY --- */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -112,7 +110,6 @@ const Navbar = () => {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-40 bg-[#02040a] md:hidden flex flex-col items-center justify-center space-y-8"
           >
-            {/* Background Glow for Mobile Menu */}
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[60vw] h-[60vw] bg-cyan-900/20 rounded-full blur-[100px] pointer-events-none" />
 
             {navLinks.map((link, index) => (

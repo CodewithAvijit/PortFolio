@@ -46,9 +46,6 @@ const GlowCard = ({ title, index }) => {
           <h3 className="text-lg font-bold text-slate-100 mb-2 group-hover:text-cyan-300 transition-colors">
             {title}
           </h3>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Deployed and operational. Ready for integration.
-          </p>
         </div>
 
       </div>

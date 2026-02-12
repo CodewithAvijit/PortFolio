@@ -60,7 +60,7 @@ const ProjectCard = ({
 
           {codeLink && (
             <Button
-              text="View Code"
+              text="View Repo"
               variant="secondary"
               onClick={() => window.open(codeLink, "_blank")}
             />
