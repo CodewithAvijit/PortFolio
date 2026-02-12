@@ -5,7 +5,7 @@ import java.util.List;
 public class ProjectAdd {
     private String title;
     private String description;
-    private String codelink; // Changed from projectLink to codelink
+    private String codelink; 
     private String livelink;
     private List<String> skillNames; 
 
@@ -17,7 +17,6 @@ public class ProjectAdd {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    // Renamed Getter and Setter to match codelink
     public String getCodelink() { return codelink; }
     public void setCodelink(String codelink) { this.codelink = codelink; }
 
