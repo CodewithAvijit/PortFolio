@@ -2,11 +2,24 @@ import React from "react";
 import { FaDownload, FaEye, FaFilePdf } from "react-icons/fa";
 
 const ResumeCard = ({ driveLink }) => {
-  const getDownloadLink = (url) => {
-    return url.replace("/view", "").replace("file/d/", "uc?export=download&id=");
+  // Helper function to extract the ID safely
+  const getDriveLinks = (url) => {
+    // Matches the ID between "/d/" and the next forward slash or end of string
+    const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    const fileId = match ? match[1] : null;
+
+    if (!fileId) {
+      // Fallback if ID cannot be extracted
+      return { view: url, download: url };
+    }
+
+    return {
+      view: `https://drive.google.com/file/d/${fileId}/view`,
+      download: `https://drive.google.com/uc?export=download&id=${fileId}`
+    };
   };
 
-  const downloadLink = getDownloadLink(driveLink);
+  const { view, download } = getDriveLinks(driveLink);
 
   return (
     <div className="flex flex-col items-center justify-center text-center space-y-6 w-full h-full p-4 group">
@@ -22,8 +35,9 @@ const ResumeCard = ({ driveLink }) => {
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-[280px]">
+        {/* VIEW BUTTON */}
         <a 
-          href={driveLink} 
+          href={view} 
           target="_blank" 
           rel="noopener noreferrer"
           className="flex-1 flex items-center justify-center gap-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white px-4 py-3 rounded-xl font-medium transition-all active:scale-95"
@@ -32,10 +46,14 @@ const ResumeCard = ({ driveLink }) => {
           View
         </a>
 
+        {/* DOWNLOAD BUTTON */}
         <a 
-          href={downloadLink} 
+          href={download} 
           target="_blank" 
           rel="noopener noreferrer"
+          // Adding 'download' attribute helps some browsers understand intent, 
+          // though Drive handles the headers mostly.
+          download 
           className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-4 py-3 rounded-xl font-medium transition-all shadow-lg shadow-blue-600/20 active:scale-95"
         >
           <FaDownload /> 
