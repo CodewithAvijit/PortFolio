@@ -10,7 +10,6 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // Handle Scroll Effect
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -48,7 +47,7 @@ const Navbar = () => {
             onClick={() => navigate("/")}
             className="text-3xl font-bold text-slate-100 cursor-pointer tracking-tighter hover:text-white transition-colors flex items-center gap-4 group"
           >
-            Avijit<span className="text-cyan-500 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] transition-all">&nbsp;• Full Stack Developer</span>
+            Avijit<span className="text-cyan-500 group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(6,182,212,0.8)] transition-all">&nbsp;•</span>
           </div>
 
           {/* --- DESKTOP MENU --- */}
