@@ -15,7 +15,7 @@ const AbyssBackground = () => (
 
 const About = () => {
   // This link works perfectly with the Regex fix in ResumeCard
-  const resumeLink = "https://drive.google.com/file/d/1wPc69-uh1PDvcvXjuTQ58rcbkUDbv6Hc/view";
+  const resumeLink = "https://drive.google.com/file/d/1tkZivW-YoQRNQkb91GPVbQNaVKlRX7je/view";
 
   const containerVariants = {
     hidden: { opacity: 0 },

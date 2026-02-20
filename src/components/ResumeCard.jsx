@@ -2,9 +2,7 @@ import React from "react";
 import { FaDownload, FaEye, FaFilePdf } from "react-icons/fa";
 
 const ResumeCard = ({ driveLink }) => {
-  // Helper function to extract the ID safely
   const getDriveLinks = (url) => {
-    // Matches the ID between "/d/" and the next forward slash or end of string
     const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
     const fileId = match ? match[1] : null;
 
