@@ -8,14 +8,12 @@ const AbyssBackground = () => (
   <div className="fixed inset-0 z-0 pointer-events-none bg-[#02040a]">
     <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[600px] bg-cyan-900/10 rounded-full blur-[120px]" />
     <div className="absolute bottom-[-10%] right-0 w-[40vw] h-[400px] bg-teal-900/10 rounded-full blur-[100px]" />
-    {/* Noise texture overlay */}
     <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
   </div>
 );
 
 const About = () => {
-  // This link works perfectly with the Regex fix in ResumeCard
-  const resumeLink = "https://drive.google.com/file/d/1tkZivW-YoQRNQkb91GPVbQNaVKlRX7je/view";
+  const resumeLink = "https://drive.google.com/file/d/1HfGgt9My1-ZrNbGJ4P-zZUYRwWoRFFy7/view";
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,7 +47,6 @@ const About = () => {
           animate="visible"
           className="max-w-6xl w-full"
         >
-          {/* Header Section */}
           <motion.div variants={itemVariants} className="mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-3 tracking-tight">
               About <span className="text-blue-500">Me</span>
@@ -59,7 +56,6 @@ const About = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            {/* Text Content Column */}
             <motion.div 
               variants={itemVariants}
               className="lg:col-span-2 bg-[#0a0f16]/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl relative overflow-hidden hover:border-white/20 transition-colors duration-500 group"
@@ -89,7 +85,6 @@ const About = () => {
                 </p>
               </div>
 
-              {/* Stats Row */}
               <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-white/5 pt-8">
                 <div className="space-y-1">
                   <h3 className="text-white font-bold text-lg tracking-tight">Education</h3>
@@ -106,14 +101,11 @@ const About = () => {
               </div>
             </motion.div>
 
-            {/* Resume Card Column */}
             <motion.div 
               variants={itemVariants}
               className="lg:col-span-1 h-full"
             >
-              {/* Added h-full and flex-col to ensure it stretches nicely */}
               <div className="bg-[#0a0f16]/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 shadow-xl flex flex-col items-center justify-center h-full min-h-[400px] hover:border-white/20 transition-all duration-500 hover:shadow-blue-500/5 group relative overflow-hidden">
-                 {/* Subtle inner glow for the card container */}
                  <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                  
                  <div className="relative z-10 w-full">
